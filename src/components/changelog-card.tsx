@@ -6,9 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CalendarDays, ExternalLink, Info, Package, Tag } from "lucide-react";
+import { CalendarDays, ExternalLink, Info } from "lucide-react";
 
 interface ChangelogCardProps {
   entry: ChangelogEntry;
@@ -16,8 +15,6 @@ interface ChangelogCardProps {
 
 export function ChangelogCard({ entry }: ChangelogCardProps) {
   const formattedDate = entry.Date ? format(new Date(entry.Date), "PPP") : "N/A";
-  const tags = entry.Tags ? entry.Tags.split(",").map(tag => tag.trim()).filter(tag => tag) : [];
-  const categories = entry.Categories ? entry.Categories.split(",").map(cat => cat.trim()).filter(cat => cat) : [];
 
   return (
     <Card className="group w-full shadow-md hover:shadow-lg transition-all duration-300 ease-in-out rounded-xl border border-border overflow-hidden flex flex-col h-full">
@@ -57,33 +54,6 @@ export function ChangelogCard({ entry }: ChangelogCardProps) {
           </p>
         </div>
 
-        {categories.length > 0 && (
-          <div className="space-y-2">
-            <h4 className="text-sm font-medium text-foreground flex items-center">
-              <Package className="mr-2 h-4 w-4 text-accent" />
-              Categories
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {categories.map((category) => (
-                <Badge key={category} variant="secondary" className="text-xs">{category}</Badge>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {tags.length > 0 && (
-          <div className="space-y-2">
-            <h4 className="text-sm font-medium text-foreground flex items-center">
-              <Tag className="mr-2 h-4 w-4 text-accent" />
-              Tags
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {tags.map((tag) => (
-                <Badge key={tag} variant="outline" className="text-xs">{tag}</Badge>
-              ))}
-            </div>
-          </div>
-        )}
       </CardContent>
       <CardFooter className="p-5 border-t border-border bg-card">
         <Button asChild variant="link" size="sm" className="text-accent p-0 h-auto hover:underline">
