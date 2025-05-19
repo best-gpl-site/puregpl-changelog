@@ -1,25 +1,53 @@
+
 import type { ChangelogEntry } from "@/types";
 import { ChangelogDisplay } from "@/components/changelog-display";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Terminal } from "lucide-react";
+import { mockApiResponse, type RawMockDateGroup, type RawMockChangelogItem } from '@/lib/mock-changelog-data';
+
+// Helper function to generate slug (simple version)
+function generateSlug(name: string): string {
+  return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+}
+
+// Helper function to clean date strings by removing ordinal suffixes
+function cleanDateString(dateStr: string): string {
+  return dateStr.replace(/(\d+)(st|nd|rd|th)/, '$1');
+}
 
 async function getChangelogData(): Promise<ChangelogEntry[]> {
   try {
-    const response = await fetch(
-      "https://apis.puregpl.com/api/v1/script/changelog?raw=true",
-      { next: { revalidate: 3600 } } // Revalidate every hour
-    );
-    if (!response.ok) {
-      console.error("Failed to fetch changelog data:", response.statusText);
+    const rawData: RawMockDateGroup[] = mockApiResponse.data;
+
+    if (!Array.isArray(rawData)) {
+      console.error("Mock data is not an array:", rawData);
       return [];
     }
-    const data = await response.json();
-    if (!Array.isArray(data)) {
-      console.error("Fetched data is not an array:", data);
-      return [];
-    }
+
+    const allEntries: ChangelogEntry[] = [];
+
+    rawData.forEach((dateGroup: RawMockDateGroup) => {
+      const cleanedDate = cleanDateString(dateGroup.name);
+      dateGroup.rows.forEach((item: RawMockChangelogItem) => {
+        allEntries.push({
+          ID: String(item.id),
+          Name: item.title,
+          Slug: generateSlug(item.title),
+          Update: item.productVersion,
+          Date: cleanedDate, // Use the cleaned date string
+          Description: `This update for ${item.title} (version ${item.productVersion}) brings various improvements and new features. Check the product page for full details.`,
+          Image: "", // ChangelogCard will use its placeholder logic
+          Categories: "Software, Tools", // Placeholder categories
+          Tags: item.isNew ? "New Release, Update" : "Update, Maintenance", // Example tags based on isNew
+          Type: "Product Update", // Placeholder type
+          Status: item.isNew ? "Newly Added" : "Updated", // Placeholder status
+          Link: "#product-link", // Placeholder link
+        });
+      });
+    });
+
     // Sort by date, newest first. Handle invalid dates by pushing them to the end.
-    return data.sort((a, b) => {
+    return allEntries.sort((a, b) => {
       const dateA = new Date(a.Date).getTime();
       const dateB = new Date(b.Date).getTime();
       if (isNaN(dateA) && isNaN(dateB)) return 0;
@@ -28,7 +56,7 @@ async function getChangelogData(): Promise<ChangelogEntry[]> {
       return dateB - dateA; // Sort valid dates descending
     });
   } catch (error) {
-    console.error("Error fetching changelog data:", error);
+    console.error("Error processing mock changelog data:", error);
     return [];
   }
 }
@@ -44,7 +72,7 @@ export default async function Home() {
             Change<span className="text-accent">Hub</span>
           </h1>
           <p className="mt-3 text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-            Stay updated with the latest product changelogs, all in one convenient place.
+            Stay updated with the latest product changelogs, all in one convenient place. (Using Mock Data)
           </p>
         </header>
 
@@ -54,7 +82,7 @@ export default async function Home() {
               <Terminal className="h-5 w-5 text-primary" />
               <AlertTitle className="text-primary font-semibold">No Updates Available</AlertTitle>
               <AlertDescription className="text-card-foreground">
-                We couldn&apos;t fetch any changelog updates at this moment. Please check back later.
+                We couldn&apos;t find any changelog updates from the mock data at this moment.
               </AlertDescription>
             </Alert>
           )}
