@@ -75,7 +75,7 @@ export default async function Home() {
             Change<span className="text-accent">Hub</span>
           </h1>
           <p className="mt-3 text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-            Stay updated with the latest product changelogs, all in one convenient place.
+            Track all the latest product updates and changelogs in one place — always stay in the loop with what's new on PureGPL.
           </p>
         </header>
 
