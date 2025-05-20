@@ -18,7 +18,7 @@ interface ChangelogDisplayProps {
 export function ChangelogDisplay({ initialEntries }: ChangelogDisplayProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [mounted, setMounted] = useState(false);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid"); // New state for view mode
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list"); // Changed default to "list"
 
   useEffect(() => {
     setMounted(true);
@@ -153,3 +153,4 @@ function ListItemSkeleton() {
     </div>
   );
 }
+
