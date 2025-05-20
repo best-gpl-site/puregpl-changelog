@@ -49,7 +49,7 @@ export function ChangelogCard({ entry }: ChangelogCardProps) {
             <Info className="mr-2 h-4 w-4 text-accent" />
             Description
           </h4>
-          <p className="text-sm text-foreground/80 leading-relaxed line-clamp-3">
+          <p className="text-sm text-foreground/80 leading-relaxed">
             {entry.Description || "No description available."}
           </p>
         </div>
@@ -66,4 +66,3 @@ export function ChangelogCard({ entry }: ChangelogCardProps) {
     </Card>
   );
 }
-
