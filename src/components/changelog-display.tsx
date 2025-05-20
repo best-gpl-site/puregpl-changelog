@@ -61,8 +61,8 @@ export function ChangelogDisplay({ initialEntries }: ChangelogDisplayProps) {
   
   return (
     <div className="space-y-8">
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-        <div className="relative w-full sm:max-w-lg">
+      <div className="flex flex-row justify-between items-center gap-4">
+        <div className="relative flex-grow sm:max-w-lg">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           <Input
             type="text"
@@ -73,7 +73,7 @@ export function ChangelogDisplay({ initialEntries }: ChangelogDisplayProps) {
             aria-label="Filter changelogs"
           />
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-shrink-0">
           <Button
             variant={viewMode === "grid" ? "default" : "outline"}
             size="icon"
@@ -153,4 +153,3 @@ function ListItemSkeleton() {
     </div>
   );
 }
-

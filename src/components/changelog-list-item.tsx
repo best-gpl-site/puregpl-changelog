@@ -35,7 +35,7 @@ export function ChangelogListItem({ entry }: ChangelogListItemProps) {
           </Link>
           <Badge 
             variant={entry.Status === "Newly Added" ? "default" : "secondary"} 
-            className="text-xs mt-1 sm:mt-0 whitespace-nowrap flex-shrink-0"
+            className="text-xs mt-1 sm:mt-0 whitespace-nowrap flex-shrink-0 self-start"
           >
             {entry.Status}
           </Badge>
@@ -55,4 +55,3 @@ export function ChangelogListItem({ entry }: ChangelogListItemProps) {
     </div>
   );
 }
-
