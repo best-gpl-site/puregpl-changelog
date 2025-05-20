@@ -44,7 +44,7 @@ async function getChangelogData(): Promise<ChangelogEntry[]> {
           Tags: item.isNew ? "New Release, Update" : "Update, Maintenance", // Example tags based on isNew
           Type: "Product Update", // Placeholder type
           Status: item.isNew ? "Newly Added" : "Updated", // Placeholder status
-          Link: `https://puregpl.com/${productSlug}`, // Use the cleaned string for the link with the specified domain
+          Link: `https://puregpl.com/downloads/${productSlug}`, // Use the cleaned string for the link with the specified domain and /downloads/ path
         });
       });
     });
