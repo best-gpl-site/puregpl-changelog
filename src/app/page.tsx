@@ -94,7 +94,7 @@ export default async function Home() {
 
         <footer className="mt-16 pt-8 border-t text-center text-muted-foreground">
           <p>&copy; {new Date().getFullYear()} ChangeHub. All rights reserved.</p>
-          <p className="text-sm mt-1">Powered by Next.js and ShadCN UI.</p>
+          <p className="text-sm mt-1">Powered by PureGPL.</p>
         </footer>
       </div>
     </div>
