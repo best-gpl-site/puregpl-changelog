@@ -43,8 +43,8 @@ export function ChangelogDisplay({ initialEntries }: ChangelogDisplayProps) {
     return (
       <div className="space-y-6">
         <div className="flex justify-between items-center">
-            <Skeleton className="h-10 w-44" /> 
-            <Skeleton className="h-12 w-full max-w-sm" />
+            <Skeleton className="h-12 w-full max-w-sm" /> 
+            <Skeleton className="h-10 w-44" />
         </div>
         <div className={cn(
             viewMode === "grid" 
@@ -62,6 +62,17 @@ export function ChangelogDisplay({ initialEntries }: ChangelogDisplayProps) {
   return (
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div className="relative w-full sm:max-w-lg">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+          <Input
+            type="text"
+            placeholder="Filter by name, description, version..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 text-base border-2 border-input focus:border-primary transition-colors"
+            aria-label="Filter changelogs"
+          />
+        </div>
         <div className="flex gap-2">
           <Button
             variant={viewMode === "grid" ? "default" : "outline"}
@@ -81,17 +92,6 @@ export function ChangelogDisplay({ initialEntries }: ChangelogDisplayProps) {
           >
             <List className="h-5 w-5" />
           </Button>
-        </div>
-        <div className="relative w-full sm:max-w-lg">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-          <Input
-            type="text"
-            placeholder="Filter by name, description, version..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 text-base border-2 border-input focus:border-primary transition-colors"
-            aria-label="Filter changelogs"
-          />
         </div>
       </div>
 
