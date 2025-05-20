@@ -23,7 +23,7 @@ export function ChangelogListItem({ entry }: ChangelogListItemProps) {
         alt={`${entry.Name} logo`}
         width={48}
         height={48}
-        className="rounded-md border border-border bg-muted object-cover flex-shrink-0"
+        className="rounded-md border border-border bg-muted object-cover flex-shrink-0 hidden sm:block"
         data-ai-hint="software logo"
       />
       <div className="flex-grow">
@@ -46,7 +46,7 @@ export function ChangelogListItem({ entry }: ChangelogListItemProps) {
           <span>{formattedDate}</span>
         </div>
       </div>
-      <Button asChild variant="outline" size="sm" className="mt-2 sm:mt-0 sm:ml-auto flex-shrink-0">
+      <Button asChild variant="outline" size="sm" className="mt-2 sm:mt-0 sm:ml-auto flex-shrink-0 hidden sm:inline-flex">
         <Link href={entry.Link} target="_blank" rel="noopener noreferrer">
           View Product
           <ExternalLink className="ml-1.5 h-3.5 w-3.5" />
@@ -55,3 +55,4 @@ export function ChangelogListItem({ entry }: ChangelogListItemProps) {
     </div>
   );
 }
+
