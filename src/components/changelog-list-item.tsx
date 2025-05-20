@@ -27,15 +27,15 @@ export function ChangelogListItem({ entry }: ChangelogListItemProps) {
         data-ai-hint="software logo"
       />
       <div className="flex-grow">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-          <Link href={entry.Link} target="_blank" rel="noopener noreferrer" className="hover:underline">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline">
+          <Link href={entry.Link} target="_blank" rel="noopener noreferrer" className="hover:underline sm:mr-2">
             <h3 className="text-lg font-semibold text-primary hover:text-accent transition-colors">
               {entry.Name}
             </h3>
           </Link>
           <Badge 
             variant={entry.Status === "Newly Added" ? "default" : "secondary"} 
-            className="text-xs mt-1 sm:mt-0 whitespace-nowrap"
+            className="text-xs mt-1 sm:mt-0 whitespace-nowrap flex-shrink-0"
           >
             {entry.Status}
           </Badge>
@@ -55,3 +55,4 @@ export function ChangelogListItem({ entry }: ChangelogListItemProps) {
     </div>
   );
 }
+
