@@ -5,9 +5,11 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Terminal } from "lucide-react";
 import { mockApiResponse, type RawMockDateGroup, type RawMockChangelogItem } from '@/lib/mock-changelog-data';
 
-// Helper function to generate slug (simple version)
-function generateSlug(name: string): string {
-  return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+// Helper function to generate product links from title
+function cleanString(inputString: string): string {
+  let specialString = inputString.replace(/[^\w\s-]/gi, '');
+  specialString = specialString.replace(/\s+/g, '-');
+  return specialString.toLowerCase();
 }
 
 // Helper function to clean date strings by removing ordinal suffixes
@@ -29,10 +31,11 @@ async function getChangelogData(): Promise<ChangelogEntry[]> {
     rawData.forEach((dateGroup: RawMockDateGroup) => {
       const cleanedDate = cleanDateString(dateGroup.name);
       dateGroup.rows.forEach((item: RawMockChangelogItem) => {
+        const productSlug = cleanString(item.title);
         allEntries.push({
           ID: String(item.id),
           Name: item.title,
-          Slug: generateSlug(item.title),
+          Slug: productSlug,
           Update: item.productVersion,
           Date: cleanedDate, // Use the cleaned date string
           Description: `This update for ${item.title} (version ${item.productVersion}) brings various improvements and new features. Check the product page for full details.`,
@@ -41,7 +44,7 @@ async function getChangelogData(): Promise<ChangelogEntry[]> {
           Tags: item.isNew ? "New Release, Update" : "Update, Maintenance", // Example tags based on isNew
           Type: "Product Update", // Placeholder type
           Status: item.isNew ? "Newly Added" : "Updated", // Placeholder status
-          Link: "#product-link", // Placeholder link
+          Link: `/product/${productSlug}`, // Use the cleaned string for the link
         });
       });
     });
