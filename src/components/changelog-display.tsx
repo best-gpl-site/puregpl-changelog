@@ -5,9 +5,9 @@ import type { ChangelogEntry } from "@/types";
 import { useState, useMemo, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { ChangelogCard } from "@/components/changelog-card";
-import { ChangelogListItem } from "@/components/changelog-list-item"; // New import
-import { Button } from "@/components/ui/button"; // New import
-import { PackageSearch, Search, LayoutGrid, List } from "lucide-react"; // New icons
+import { ChangelogListItem } from "@/components/changelog-list-item";
+import { Button } from "@/components/ui/button";
+import { PackageSearch, Search, LayoutGrid, List } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
@@ -15,10 +15,13 @@ interface ChangelogDisplayProps {
   initialEntries: ChangelogEntry[];
 }
 
+const ITEMS_PER_PAGE = 150;
+
 export function ChangelogDisplay({ initialEntries }: ChangelogDisplayProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [mounted, setMounted] = useState(false);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("list"); // Changed default to "list"
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     setMounted(true);
@@ -39,12 +42,26 @@ export function ChangelogDisplay({ initialEntries }: ChangelogDisplayProps) {
     );
   }, [initialEntries, searchQuery]);
 
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filteredEntries]);
+
+  const totalPages = filteredEntries.length > 0 ? Math.ceil(filteredEntries.length / ITEMS_PER_PAGE) : 0;
+
+  const paginatedEntries = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    return filteredEntries.slice(startIndex, endIndex);
+  }, [filteredEntries, currentPage]);
+
+
   if (!mounted) {
     return (
       <div className="space-y-6">
-        <div className="flex justify-between items-center">
-            <Skeleton className="h-12 w-full max-w-sm" /> 
-            <Skeleton className="h-10 w-44" />
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+            <Skeleton className="h-12 w-full sm:max-w-lg" /> 
+            <Skeleton className="h-10 w-24" /> {/* Adjusted width for two icon buttons */}
         </div>
         <div className={cn(
             viewMode === "grid" 
@@ -61,8 +78,8 @@ export function ChangelogDisplay({ initialEntries }: ChangelogDisplayProps) {
   
   return (
     <div className="space-y-8">
-      <div className="flex flex-row justify-between items-center gap-4">
-        <div className="relative flex-grow sm:max-w-lg">
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div className="relative flex-grow w-full sm:max-w-lg">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           <Input
             type="text"
@@ -95,18 +112,43 @@ export function ChangelogDisplay({ initialEntries }: ChangelogDisplayProps) {
         </div>
       </div>
 
-      {filteredEntries.length > 0 ? (
-        <div className={cn(
-          viewMode === "grid" 
-            ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-            : "flex flex-col gap-4"
-        )}>
-          {filteredEntries.map((entry) => (
+      {paginatedEntries.length > 0 ? (
+        <>
+          <div className={cn(
             viewMode === "grid" 
-              ? <ChangelogCard key={entry.ID} entry={entry} />
-              : <ChangelogListItem key={entry.ID} entry={entry} />
-          ))}
-        </div>
+              ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              : "flex flex-col gap-4"
+          )}>
+            {paginatedEntries.map((entry) => (
+              viewMode === "grid" 
+                ? <ChangelogCard key={entry.ID} entry={entry} />
+                : <ChangelogListItem key={entry.ID} entry={entry} />
+            ))}
+          </div>
+          {totalPages > 1 && (
+            <div className="mt-8 flex items-center justify-center space-x-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </Button>
+              <span className="text-sm text-muted-foreground">
+                Page {currentPage} of {totalPages}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </Button>
+            </div>
+          )}
+        </>
       ) : (
         <div className="text-center py-12">
           <PackageSearch className="mx-auto h-16 w-16 text-muted-foreground mb-4" />
@@ -124,18 +166,18 @@ function CardSkeleton() {
   return (
     <div className="p-4 border rounded-lg shadow-sm bg-card">
       <div className="flex items-start gap-4 mb-4">
-        <Skeleton className="h-16 w-16 rounded-md" /> {/* Adjusted size */}
+        <Skeleton className="h-16 w-16 rounded-md" />
         <div className="flex-1 space-y-2">
           <Skeleton className="h-6 w-3/4" />
           <Skeleton className="h-4 w-1/2" />
-          <Skeleton className="h-5 w-20 mt-1" /> {/* Skeleton for status badge */}
+          <Skeleton className="h-5 w-20 mt-1" />
         </div>
       </div>
-      <Skeleton className="h-4 w-1/3 mb-3" /> {/* Skeleton for date */}
+      <Skeleton className="h-4 w-1/3 mb-3" />
       <Skeleton className="h-4 w-full mb-2" />
       <Skeleton className="h-4 w-full mb-2" />
       <Skeleton className="h-4 w-5/6 mb-4" />
-      <Skeleton className="h-8 w-28" /> {/* Skeleton for button */}
+      <Skeleton className="h-8 w-28" />
     </div>
   );
 }
@@ -143,13 +185,13 @@ function CardSkeleton() {
 function ListItemSkeleton() {
   return (
     <div className="flex items-center gap-4 p-4 border rounded-lg shadow-sm bg-card">
-      <Skeleton className="h-12 w-12 rounded-md flex-shrink-0" />
+      <Skeleton className="h-12 w-12 rounded-md flex-shrink-0 hidden sm:block" />
       <div className="flex-grow space-y-2">
         <Skeleton className="h-5 w-3/4" />
         <Skeleton className="h-4 w-1/2" />
         <Skeleton className="h-4 w-1/4" />
       </div>
-      <Skeleton className="h-8 w-24 flex-shrink-0" />
+      <Skeleton className="h-8 w-24 flex-shrink-0 hidden sm:inline-flex" />
     </div>
   );
 }
