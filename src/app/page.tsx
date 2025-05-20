@@ -3,7 +3,25 @@ import type { ChangelogEntry } from "@/types";
 import { ChangelogDisplay } from "@/components/changelog-display";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Terminal } from "lucide-react";
-import { mockApiResponse, type RawMockDateGroup, type RawMockChangelogItem } from '@/lib/mock-changelog-data';
+
+// Interfaces for the raw API response structure
+interface RawMockChangelogItem {
+  id: number;
+  title: string;
+  productVersion: string;
+  isNew: number; // 0 or 1
+}
+
+interface RawMockDateGroup {
+  name: string; // Date string e.g., "May 17th, 2025"
+  rows: RawMockChangelogItem[];
+}
+
+interface RawMockApiResponse {
+  message: string;
+  error: boolean;
+  data: RawMockDateGroup[];
+}
 
 // Helper function to generate product links from title
 function cleanString(inputString: string): string {
@@ -19,13 +37,23 @@ function cleanDateString(dateStr: string): string {
 
 async function getChangelogData(): Promise<ChangelogEntry[]> {
   try {
-    const rawData: RawMockDateGroup[] = mockApiResponse.data;
+    const response = await fetch('https://apis.puregpl.com/api/v1/script/changelog?raw=true', { cache: 'no-store' });
 
-    if (!Array.isArray(rawData)) {
-      console.error("Mock data is not an array:", rawData);
+    if (!response.ok) {
+      console.error("Failed to fetch changelog data:", response.status, response.statusText);
+      const errorBody = await response.text();
+      console.error("Error body:", errorBody);
       return [];
     }
 
+    const apiResponse: RawMockApiResponse = await response.json();
+
+    if (apiResponse.error || !Array.isArray(apiResponse.data)) {
+      console.error("API response error or data is not an array:", apiResponse);
+      return [];
+    }
+
+    const rawData: RawMockDateGroup[] = apiResponse.data;
     const allEntries: ChangelogEntry[] = [];
 
     rawData.forEach((dateGroup: RawMockDateGroup) => {
@@ -37,14 +65,14 @@ async function getChangelogData(): Promise<ChangelogEntry[]> {
           Name: item.title,
           Slug: productSlug,
           Update: item.productVersion,
-          Date: cleanedDate, // Use the cleaned date string
+          Date: cleanedDate,
           Description: `This update for ${item.title} (version ${item.productVersion}) brings various improvements and new features. Check the product page for full details.`,
           Image: "", // ChangelogCard will use its placeholder logic
           Categories: "Software, Tools", // Placeholder categories
           Tags: item.isNew ? "New Release, Update" : "Update, Maintenance", // Example tags based on isNew
           Type: "Product Update", // Placeholder type
           Status: item.isNew ? "Newly Added" : "Updated", // Placeholder status
-          Link: `https://puregpl.com/downloads/${productSlug}`, // Use the cleaned string for the link with the specified domain and /downloads/ path
+          Link: `https://puregpl.com/downloads/${productSlug}`,
         });
       });
     });
@@ -54,12 +82,12 @@ async function getChangelogData(): Promise<ChangelogEntry[]> {
       const dateA = new Date(a.Date).getTime();
       const dateB = new Date(b.Date).getTime();
       if (isNaN(dateA) && isNaN(dateB)) return 0;
-      if (isNaN(dateA)) return 1; // Push invalid dates to the end
-      if (isNaN(dateB)) return -1; // Keep valid dates before invalid ones
-      return dateB - dateA; // Sort valid dates descending
+      if (isNaN(dateA)) return 1;
+      if (isNaN(dateB)) return -1;
+      return dateB - dateA;
     });
   } catch (error) {
-    console.error("Error processing mock changelog data:", error);
+    console.error("Error fetching or processing changelog data:", error);
     return [];
   }
 }
@@ -85,7 +113,7 @@ export default async function Home() {
               <Terminal className="h-5 w-5 text-primary" />
               <AlertTitle className="text-primary font-semibold">No Updates Available</AlertTitle>
               <AlertDescription className="text-card-foreground">
-                We couldn&apos;t find any changelog updates from the mock data at this moment.
+                We couldn&apos;t fetch any changelog updates at this moment. Please check back later.
               </AlertDescription>
             </Alert>
           )}
