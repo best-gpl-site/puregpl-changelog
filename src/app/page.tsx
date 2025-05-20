@@ -75,7 +75,7 @@ export default async function Home() {
             Change<span className="text-accent">Hub</span>
           </h1>
           <p className="mt-3 text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-            Stay updated with the latest product changelogs, all in one convenient place. (Using Mock Data)
+            Stay updated with the latest product changelogs, all in one convenient place.
           </p>
         </header>
 
