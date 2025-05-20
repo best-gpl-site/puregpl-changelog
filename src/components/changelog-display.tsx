@@ -45,7 +45,7 @@ export function ChangelogDisplay({ initialEntries }: ChangelogDisplayProps) {
   // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [filteredEntries]);
+  }, [searchQuery]); // Reset only when searchQuery changes, not all filteredEntries
 
   const totalPages = filteredEntries.length > 0 ? Math.ceil(filteredEntries.length / ITEMS_PER_PAGE) : 0;
 
@@ -86,7 +86,7 @@ export function ChangelogDisplay({ initialEntries }: ChangelogDisplayProps) {
             placeholder="Filter by name, description, version..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 text-base border-2 border-input focus:border-primary transition-colors"
+            className="w-full pl-10 pr-4 py-2 text-base border-2 border-border focus:border-primary transition-colors"
             aria-label="Filter changelogs"
           />
         </div>
@@ -125,7 +125,7 @@ export function ChangelogDisplay({ initialEntries }: ChangelogDisplayProps) {
                 : <ChangelogListItem key={entry.ID} entry={entry} />
             ))}
           </div>
-          {totalPages > 1 && (
+          {totalPages > 0 && totalPages > 1 && (
             <div className="mt-8 flex items-center justify-center space-x-4">
               <Button
                 variant="outline"
@@ -195,3 +195,4 @@ function ListItemSkeleton() {
     </div>
   );
 }
+
