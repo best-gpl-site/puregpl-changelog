@@ -7,6 +7,7 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { CalendarDays, ExternalLink, Info } from "lucide-react";
 
 interface ChangelogCardProps {
@@ -36,6 +37,14 @@ export function ChangelogCard({ entry }: ChangelogCardProps) {
           <CardDescription className="text-xs text-muted-foreground mt-1">
             Version: {entry.Update}
           </CardDescription>
+          {entry.Status && (
+            <Badge 
+              variant={entry.Status === "Newly Added" ? "default" : "secondary"} 
+              className="mt-2 text-xs"
+            >
+              {entry.Status}
+            </Badge>
+          )}
         </div>
       </CardHeader>
       <CardContent className="p-5 space-y-4 flex-grow bg-card">
