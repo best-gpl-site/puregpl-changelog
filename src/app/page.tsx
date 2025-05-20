@@ -37,7 +37,7 @@ function cleanDateString(dateStr: string): string {
 
 async function getChangelogData(): Promise<ChangelogEntry[]> {
   try {
-    const response = await fetch('https://apis.puregpl.com/api/v1/script/changelog?raw=true', { cache: 'no-store' });
+    const response = await fetch('https://apis.puregpl.com/api/v1/script/changelog', { cache: 'no-store' });
 
     if (!response.ok) {
       console.error("Failed to fetch changelog data:", response.status, response.statusText);
