@@ -59,9 +59,12 @@ export function ChangelogDisplay({ initialEntries }: ChangelogDisplayProps) {
   if (!mounted) {
     return (
       <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <Skeleton className="h-12 w-full sm:max-w-lg" /> 
-            <Skeleton className="h-10 w-24" /> {/* Adjusted width for two icon buttons */}
+        <div className="flex flex-row items-center gap-x-3 w-full">
+            <Skeleton className="h-12 flex-grow" /> 
+            <div className="flex gap-x-1">
+              <Skeleton className="h-10 w-10" />
+              <Skeleton className="h-10 w-10" />
+            </div>
         </div>
         <div className={cn(
             viewMode === "grid" 
@@ -78,8 +81,8 @@ export function ChangelogDisplay({ initialEntries }: ChangelogDisplayProps) {
   
   return (
     <div className="space-y-8">
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-        <div className="relative flex-grow w-full sm:max-w-lg">
+      <div className="flex flex-row items-center gap-x-3 w-full">
+        <div className="relative flex-grow">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           <Input
             type="text"
@@ -90,7 +93,7 @@ export function ChangelogDisplay({ initialEntries }: ChangelogDisplayProps) {
             aria-label="Filter changelogs"
           />
         </div>
-        <div className="flex gap-2 flex-shrink-0">
+        <div className="flex gap-x-1 flex-shrink-0">
           <Button
             variant={viewMode === "grid" ? "default" : "outline"}
             size="icon"
