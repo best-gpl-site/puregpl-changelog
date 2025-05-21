@@ -59,7 +59,7 @@ export function ChangelogDisplay({ initialEntries }: ChangelogDisplayProps) {
   if (!mounted) {
     return (
       <div className="space-y-6">
-        <div className="flex flex-row items-center gap-x-3 w-full">
+        <div className="flex flex-row items-center justify-between w-full">
             <Skeleton className="h-12 flex-grow max-w-[786px]" /> 
             <div className="flex gap-x-1 flex-shrink-0">
               <Skeleton className="h-10 w-10" />
@@ -81,7 +81,7 @@ export function ChangelogDisplay({ initialEntries }: ChangelogDisplayProps) {
   
   return (
     <div className="space-y-8">
-      <div className="flex flex-row items-center gap-x-3 w-full">
+      <div className="flex flex-row items-center justify-between w-full">
         <div className="relative flex-grow max-w-[786px]">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           <Input
@@ -198,4 +198,3 @@ function ListItemSkeleton() {
     </div>
   );
 }
-
