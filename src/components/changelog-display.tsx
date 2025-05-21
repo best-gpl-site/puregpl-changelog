@@ -45,7 +45,7 @@ export function ChangelogDisplay({ initialEntries }: ChangelogDisplayProps) {
   // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery]); // Reset only when searchQuery changes, not all filteredEntries
+  }, [searchQuery]); 
 
   const totalPages = filteredEntries.length > 0 ? Math.ceil(filteredEntries.length / ITEMS_PER_PAGE) : 0;
 
@@ -60,8 +60,8 @@ export function ChangelogDisplay({ initialEntries }: ChangelogDisplayProps) {
     return (
       <div className="space-y-6">
         <div className="flex flex-row items-center gap-x-3 w-full">
-            <Skeleton className="h-12 flex-grow" /> 
-            <div className="flex gap-x-1">
+            <Skeleton className="h-12 flex-grow max-w-[786px]" /> 
+            <div className="flex gap-x-1 flex-shrink-0">
               <Skeleton className="h-10 w-10" />
               <Skeleton className="h-10 w-10" />
             </div>
@@ -82,7 +82,7 @@ export function ChangelogDisplay({ initialEntries }: ChangelogDisplayProps) {
   return (
     <div className="space-y-8">
       <div className="flex flex-row items-center gap-x-3 w-full">
-        <div className="relative flex-grow">
+        <div className="relative flex-grow max-w-[786px]">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           <Input
             type="text"
